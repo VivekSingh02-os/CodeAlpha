@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Simple Music Player</title>
+<style>
+ body{margin:0;height:100vh;display:grid;place-items:center;background:#111827;color:#fff;font-family:Arial,sans-serif}
+ .box{width:340px;background:#1f2937;padding:14px;border-radius:18px;box-shadow:0 10px 25px #0008}
+ .cover{height:100px;border-radius:14px;background:linear-gradient(135deg,#38bdf8,#8b5cf6);margin-bottom:10px}
+ h2{margin:6px 0 2px;font-size:18px} p{margin:0 0 6px;color:#cbd5e1;font-size:13px}
+ input[type=range]{width:100%;accent-color:#38bdf8}
+ .row{display:flex;justify-content:space-between;font-size:12px;color:#cbd5e1;margin:4px 0}
+ .ctrl{display:flex;justify-content:center;gap:8px;margin:10px 0}
+ button{border:0;border-radius:10px;padding:10px 12px;background:#374151;color:#fff;cursor:pointer}
+ .main{background:#2563eb}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="cover"></div>
+  <h2 id="title">Song Title</h2>
+  <p id="artist">Artist Name</p>
+  <div class="row"><span id="cur">0:00</span><span id="dur">0:00</span></div>
+  <input id="progress" type="range" min="0" max="100" value="0" />
+  <div class="ctrl"><button id="prev">⏮</button><button id="play" class="main">▶ Play</button><button id="next">⏭</button></div>
+  <div class="row"><label>Volume <input id="vol" type="range" min="0" max="1" step="0.05" value="0.7" /></label></div>
+</div>
+<audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+<script>
+const songs=[{title:'Sunrise',artist:'Aurora',src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'},{title:'Ocean Wave',artist:'Luna',
+src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'},{title:'Night Drive',artist:'Nova',src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'}];
+let i=0,a=document.getElementById('audio'),t=document.getElementById('title'),ar=document.getElementById('artist'),c=document.getElementById('cur'),d=document.getElementById('dur')
+,p=document.getElementById('progress'),v=document.getElementById('vol');
+function fmt(x){x=Math.floor(x||0);return `${Math.floor(x/60)}:${String(x%60).padStart(2,'0')}`;}
+function loadSong(n){i=n;a.src=songs[i].src;t.textContent=songs[i].title;ar.textContent=songs[i].artist;a.load();a.play();}
+loadSong(0);
+document.getElementById('play').onclick=()=>a.paused?a.play():a.pause();
+document.getElementById('next').onclick=()=>loadSong((i+1)%songs.length);
+document.getElementById('prev').onclick=()=>loadSong((i-1+songs.length)%songs.length);
+a.onplay=()=>document.getElementById('play').textContent='❚❚ Pause';
+a.onpause=()=>document.getElementById('play').textContent='▶ Play';
+a.ontimeupdate=()=>{p.value=(a.currentTime/a.duration)*100||0;c.textContent=fmt(a.currentTime);d.textContent=fmt(a.duration);};
+v.oninput=()=>a.volume=v.value;
+p.oninput=()=>a.currentTime=p.value/100*a.duration;
+</script>
+</body></html>
