@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{font-family:Arial,sans-serif;background:#0f172a;color:#fff;margin:0;padding:16px}h1{margin:6px 0}p{color:#cbd5e1}button{cursor:pointer}
+.chips,.navs{display:flex;flex-wrap:wrap;gap:8px}.chip,.nav,.close{background:#1f2937;color:#fff;border:1px solid #374151;border-radius:999px;
+padding:8px 10px}.chip.active{background:#2563eb}.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;
+margin-top:12px}.card{background:#111827;border-radius:14px;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.35);transition:.2s}
+.card:hover{transform:translateY(-4px)}.card img{width:100%;height:140px;object-fit:cover}.info{padding:8px}.lightbox{position:fixed;inset:0;
+background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:12px}.lightbox.show{display:flex}.panel
+{background:#111827;border-radius:16px;max-width:900px;width:100%;overflow:hidden}.panel img{width:100%;max-height:70vh;
+object-fit:cover}.foot{display:flex;justify-content:space-between;gap:10px;padding:10px}</style>
+</head>
+<body>
+<h1>Simple Image Gallery</h1>
+<p>Filter, hover, and click to open images.</p>
+<div id="chips" class="chips"></div>
+<div id="g" class="gallery"></div>
+<div id="lb" class="lightbox"><div class="panel"><img id="img"><div class="foot"><div><b id="title"></b><div id="desc" style="color:#cbd5e1"></div></div>
+<div class="navs"><button class="nav" onclick="prev()">Prev</button><button class="nav" onclick="next()">Next</button><button class="close" onclick="close()">✕
+
+</button></div></div></div></div>
+<script>
+const data=[{n:'Sunset',c:'nature',s:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80'},{n:'City Lights',c:'city',
+s:'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80'},{n:'Art Flow',c:'art',
+s:'https://images.unsplash.com/photo-1515405295579-ba7b45403062?auto=format&fit=crop&w=900&q=80'},{n:'Mountain',c:'nature',
+s:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80'},{n:'Metro',c:'city',
+s:'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=900&q=80'}];
+let f='all',idx=0;
+const chips=document.getElementById('chips'),g=document.getElementById('g'),lb=document.getElementById('lb'),img=document.getElementById('img'),title=document.getElementById('title'),desc=document.getElementById('desc');
+function list(){return f=='all'?data:data.filter(x=>x.c==f)}function render(){chips.innerHTML=['all',...new Set(data.map(x=>x.c))].map(c=>`<button class="chip ${f==c?'active':''}" onclick="set('${c}')">${c}</button>`)
+.join('');g.innerHTML=list().map((x,i)=>`<article class="card" onclick="open(${i})"><img src="${x.s}"><div class="info"><b>${x.n}</b><div style="color:#cbd5e1">${x.c}</div></div></article>`).join('');}function open(i)
+{idx=i;let a=list();img.src=a[idx].s;title.textContent=a[idx].n;desc.textContent=a[idx].c;lb.classList.add('show');}function next(){let a=list();idx=(idx+1)%a.length;img.src=a[idx].s;title.textContent=a[idx].n;desc.textContent=a[idx].c;
+}function prev(){let a=list();idx=(idx-1+a.length)%a.length;img.src=a[idx].s;title.textContent=a[idx].n;desc.textContent=a[idx].c;}
+function close(){lb.classList.remove('show');}function set(c){f=c;render();}render();
+</script>
+</body>
+</html>
