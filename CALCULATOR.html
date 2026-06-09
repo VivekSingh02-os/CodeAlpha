@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Simple Calculator</title>
+<style>
+ body{margin:0;height:100vh;display:grid;place-items:center;background:#111827;font-family:Arial,sans-serif;color:#fff}
+ .calc{width:320px;background:#1f2937;padding:14px;border-radius:18px;box-shadow:0 10px 25px #0008}
+ input{width:100%;height:58px;font-size:28px;text-align:right;border:0;border-radius:12px;padding:10px;background:#111827;color:#fff;margin-bottom:10px}
+ .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+ button{padding:14px;border:0;border-radius:12px;font-size:18px;background:#374151;color:#fff;cursor:pointer}
+ button:hover{background:#4b5563}
+ .op{background:#2563eb}.eq{background:#10b981}.clr{background:#ef4444}
+</style>
+</head>
+<body>
+<div class="calc">
+  <input id="display" value="0" readonly>
+  <div class="keys">
+    <button class="clr" onclick="clearAll()">C</button>
+    <button onclick="append('7')">7</button><button onclick="append('8')">8</button><button onclick="append('9')">9</button>
+    <button class="op" onclick="append('÷')">÷</button>
+    <button onclick="append('4')">4</button><button onclick="append('5')">5</button><button onclick="append('6')">6</button>
+    <button class="op" onclick="append('×')">×</button>
+    <button onclick="append('1')">1</button><button onclick="append('2')">2</button><button onclick="append('3')">3</button>
+    <button class="op" onclick="append('-')">−</button>
+    <button onclick="append('0')">0</button><button onclick="append('.')">.</button><button onclick="back()">⌫</button>
+    <button class="op" onclick="append('+')">+</button>
+    <button class="eq" onclick="calc()" style="grid-column:span 4">=</button>
+  </div>
+</div>
+<script>
+const d=document.getElementById('display');
+function append(v){d.value=d.value==='0'?v:d.value+v;}
+function back(){d.value=d.value.length<2?'0':d.value.slice(0,-1);}
+function clearAll(){d.value='0';}
+function calc(){
+  try{d.value=Function('return ('+d.value.replace(/×/g,'*').replace(/÷/g,'/')+')')();}
+  catch{d.value='Error';}
+}
+document.onkeydown=e=>{
+  if(/[0-9.+\-*/]/.test(e.key)) append(e.key.replace('*','×').replace('/','÷'));
+  else if(e.key==='Enter'){calc();}
+  else if(e.key==='Backspace'){back();}
+  else if(e.key==='Escape'){clearAll();}
+};
+</script>
+</body></html>
